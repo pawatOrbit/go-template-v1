@@ -1,0 +1,48 @@
+env: local
+
+restServer:
+  port: 8080
+
+cors:
+  allowOrigins:
+    - "*"
+  AllowedMethods:
+    - "HEAD"
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "PATCH"
+    - "DELETE"
+  allowHeaders:
+    - "*"
+  exposeHeaders:
+    - "Accept"
+    - "Accept-Encoding"
+    - "Accept-Post"
+    - "Connect-Accept-Encoding"
+    - "Connect-Content-Encoding"
+    - "Content-Encoding"
+    - "Grpc-Accept-Encoding"
+    - "Grpc-Encoding"
+    - "Grpc-Message"
+    - "Grpc-Status"
+    - "Grpc-Status-Details-Bin"
+  maxAge: 7200 # in seconds
+
+postgres:
+  read:
+    host: ""
+    port: 5432
+    username: ""
+    password: ""
+    database: ""
+    schema: "public"
+    maxConnections: 20
+  write:
+    host: ""
+    port: 5432
+    username: ""
+    password: ""
+    database: ""
+    schema: "public"
+    maxConnections: 20
