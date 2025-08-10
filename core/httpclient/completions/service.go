@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	core_config "github.com/pawatOrbit/ai-mock-data-service/go/core/config"
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/httpclient/common"
+	core_config "github.com/yourorg/go-api-template/core/config"
+	"github.com/yourorg/go-api-template/core/httpclient/common"
 )
 
 type CompletionsServiceClient interface {

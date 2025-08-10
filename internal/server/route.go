@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/transport/httpserver"
-	middleware_httpserver "github.com/pawatOrbit/ai-mock-data-service/go/core/transport/httpserver/middlewares"
-	"github.com/pawatOrbit/ai-mock-data-service/go/internal/model"
-	"github.com/pawatOrbit/ai-mock-data-service/go/internal/service"
+	"github.com/yourorg/go-api-template/core/transport/httpserver"
+	middleware_httpserver "github.com/yourorg/go-api-template/core/transport/httpserver/middlewares"
+	"github.com/yourorg/go-api-template/internal/model"
+	"github.com/yourorg/go-api-template/internal/service"
 )
 
 func registerRoute(service service.Service) http.Handler {
@@ -18,6 +18,40 @@ func registerRoute(service service.Service) http.Handler {
 		middleware_httpserver.NotFound(w, r)
 	}))
 
+	// Health check endpoints (no authentication required)
+	r.Get("/health", httpserver.NewTransport(
+		&struct{}{},
+		httpserver.NewEndpoint(func(ctx context.Context, in *struct{}) (*model.HealthCheckResponse, error) {
+			return service.HealthService.HealthCheck(ctx)
+		}),
+	))
+
+	r.Get("/health/liveness", httpserver.NewTransport(
+		&struct{}{},
+		httpserver.NewEndpoint(func(ctx context.Context, in *struct{}) (*model.LivenessResponse, error) {
+			return service.HealthService.Liveness(ctx)
+		}),
+	))
+
+	r.Get("/health/readiness", httpserver.NewTransport(
+		&struct{}{},
+		httpserver.NewEndpoint(func(ctx context.Context, in *struct{}) (*model.ReadinessResponse, error) {
+			return service.HealthService.Readiness(ctx)
+		}),
+	))
+
+	// Example API endpoints - replace with your actual endpoints
+	r.Get("/api/v1/examples/{id}", httpserver.NewTransport(
+		&model.ExampleRequest{},
+		httpserver.NewEndpoint(service.ExampleService.GetExample),
+	))
+
+	r.Post("/api/v1/examples", httpserver.NewTransport(
+		&model.CreateExampleRequest{},
+		httpserver.NewEndpoint(service.ExampleService.CreateExample),
+	))
+
+	// Legacy health check endpoint (deprecated)
 	r.Post("/health-check",
 		httpserver.NewTransport(
 			&model.HealthReq{},
@@ -27,12 +61,5 @@ func registerRoute(service service.Service) http.Handler {
 					Response: "Hello, " + in.Name,
 				}, nil
 			})))
-
-	r.Post("/v1/table_schemas/get_table_schemas_list",
-		httpserver.NewTransport(
-			&model.GetDatabaseSchemaTableNamesRequest{},
-			httpserver.NewEndpoint(
-				service.TableSchemasService.GetDatabaseSchemaTableNames,
-			)))
 	return mux
 }

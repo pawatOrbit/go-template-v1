@@ -8,7 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/pgdb"
+	"github.com/yourorg/go-api-template/core/pgdb"
 )
 
 func Execute[R any](dbModel R, query string, args pgx.NamedArgs, isQueryWrite bool) ([]R, *int, error) {

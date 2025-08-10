@@ -1,0 +1,75 @@
+version: '3.8'
+
+# Development override for docker-compose
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Mount source code for development (if using live reload)
+      - .:/app:ro
+      - ./config:/root/config:rw
+    environment:
+      - ENV=docker
+      - GO_ENV=development
+    # Override command for development with live reload (requires air or similar tool)
+    # command: air -c .air.toml
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    # Enable debugging
+    # ports:
+    #   - "8080:8080"
+    #   - "2345:2345"  # Delve debugger port
+
+  postgres:
+    environment:
+      # Development database settings
+      POSTGRES_DB: go_api_template_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5433:5432"  # Use different port to avoid conflicts
+
+  redis:
+    # Enable redis debugging in development
+    command: redis-server --appendonly yes --loglevel debug
+
+  # Enable development tools by default in dev environment
+  pgadmin:
+    profiles: []  # Remove profile to enable by default
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@example.com
+      PGADMIN_DEFAULT_PASSWORD: dev123
+    volumes:
+      - ./dev-data/pgadmin:/var/lib/pgadmin
+
+  redis-commander:
+    profiles: []  # Remove profile to enable by default
+    environment:
+      REDIS_HOSTS: local:redis:6379
+      HTTP_USER: dev
+      HTTP_PASSWORD: dev123
+    volumes:
+      - ./dev-data/redis-commander:/data
+
+volumes:
+  postgres_data:
+    # Use local directory for easier debugging in development
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/dev-data/postgres
+      o: bind
+  
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none  
+      device: ${PWD}/dev-data/redis
+      o: bind

@@ -1,6 +1,6 @@
 package httpserver
 
-import "github.com/pawatOrbit/ai-mock-data-service/go/core/transport"
+import "github.com/yourorg/go-api-template/core/transport"
 
 
 type Endpoint[T, R any] func() (fn transport.Service[T, R])

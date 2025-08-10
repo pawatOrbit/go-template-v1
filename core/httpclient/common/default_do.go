@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	core_config "github.com/pawatOrbit/ai-mock-data-service/go/core/config"
+	core_config "github.com/yourorg/go-api-template/core/config"
 )
 
 type ContentType int

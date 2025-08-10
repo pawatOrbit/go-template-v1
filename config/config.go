@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"dario.cat/mergo"
-	core_config "github.com/pawatOrbit/ai-mock-data-service/go/core/config"
+	core_config "github.com/yourorg/go-api-template/core/config"
 	"github.com/spf13/viper"
 )
 

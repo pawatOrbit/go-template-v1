@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/logger"
+	"github.com/yourorg/go-api-template/core/logger"
 )
 
 // LoggingNetHttp is a middleware that logs the incoming request and the outgoing response.

@@ -5,7 +5,7 @@ import (
 
 	"log/slog"
 
-	"github.com/pawatOrbit/ai-mock-data-service/go/utils/runtime"
+	"github.com/yourorg/go-api-template/utils/runtime"
 	"go.uber.org/zap"
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/exp/zapslog"

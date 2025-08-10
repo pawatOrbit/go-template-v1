@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/go-slog/otelslog"
-	"github.com/pawatOrbit/ai-mock-data-service/go/utils/runtime"
+	"github.com/yourorg/go-api-template/utils/runtime"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
@@ -162,4 +162,32 @@ func (p Pathfinder) DebugContext(ctx context.Context, msg string, fields ...any)
 
 func (p Pathfinder) NewPathfinder(svc string) Pathfinder {
 	return Pathfinder{svc: p.svc + "." + svc}
+}
+
+// LogFieldsKey is the key used to store additional fields in context
+type LogFieldsKey string
+
+const ContextLogFieldsKey LogFieldsKey = "log_fields"
+
+// AddFieldsToContext adds structured logging fields to context
+func AddFieldsToContext(ctx context.Context, fields map[string]interface{}) context.Context {
+	existing, ok := ctx.Value(ContextLogFieldsKey).(map[string]interface{})
+	if !ok {
+		existing = make(map[string]interface{})
+	}
+	
+	// Merge new fields with existing ones
+	for k, v := range fields {
+		existing[k] = v
+	}
+	
+	return context.WithValue(ctx, ContextLogFieldsKey, existing)
+}
+
+// GetFieldsFromContext retrieves logging fields from context
+func GetFieldsFromContext(ctx context.Context) map[string]interface{} {
+	if fields, ok := ctx.Value(ContextLogFieldsKey).(map[string]interface{}); ok {
+		return fields
+	}
+	return make(map[string]interface{})
 }

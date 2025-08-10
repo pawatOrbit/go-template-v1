@@ -4,11 +4,15 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/pgdb"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/yourorg/go-api-template/core/pgdb"
 )
 
 type Repository struct{
-	TableSchemasRepository TableSchemasRepository
+	DB                *pgxpool.Pool // For health checks and other operations
+	
+	// Example repositories - replace with your actual repositories
+	ExampleRepository ExampleRepository
 }
 
 func NewRepository() (*Repository, error) {
@@ -25,6 +29,9 @@ func NewRepository() (*Repository, error) {
 	slog.Info("Repository initialized", "readPgPool", readPgPool!=nil, "writePgPool", writePgPool!=nil)
 	// Initialize all repositories here
 	return &Repository{
-		TableSchemasRepository: NewTableSchemasRepository(readPgPool, writePgPool),
+		DB: readPgPool, // Use read pool for health checks
+		
+		// Example repositories - replace with your actual repositories
+		ExampleRepository: NewExampleRepository(readPgPool, writePgPool),
 	}, nil
 }

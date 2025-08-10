@@ -46,3 +46,39 @@ postgres:
     database: ""
     schema: "public"
     maxConnections: 20
+
+auth:
+  jwtSecretKey: "your-super-secret-jwt-key-change-this-in-production"
+  tokenDuration: "24h"
+  refreshDuration: "168h"
+  skipAuthPaths:
+    - "/health"
+    - "/metrics"
+    - "/api/v1/auth/login"
+    - "/api/v1/auth/register"
+    - "/api/v1/auth/refresh"
+
+redis:
+  host: "localhost"
+  port: 6379
+  password: ""
+  database: 0
+  maxRetries: 3
+  poolSize: 10
+  minIdleConns: 5
+  dialTimeout: "5s"
+  readTimeout: "3s"
+  writeTimeout: "3s"
+  idleTimeout: "5m"
+
+rateLimit:
+  enabled: true
+  requests: 100
+  window: "1h"
+  includeHeaders: true
+  message: "Rate limit exceeded"
+  statusCode: 429
+  skipPaths:
+    - "/health"
+    - "/health/*"
+    - "/metrics"

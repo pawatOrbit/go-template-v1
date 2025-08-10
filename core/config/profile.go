@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"strings"
 
-	"github.com/pawatOrbit/ai-mock-data-service/go/utils/runtime"
+	"github.com/yourorg/go-api-template/utils/runtime"
 )
 
 type Profile struct {

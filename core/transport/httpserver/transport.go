@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/logger"
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/transport"
-	middleware "github.com/pawatOrbit/ai-mock-data-service/go/core/transport/httpserver/middlewares"
+	"github.com/yourorg/go-api-template/core/logger"
+	"github.com/yourorg/go-api-template/core/transport"
+	middleware "github.com/yourorg/go-api-template/core/transport/httpserver/middlewares"
 )
 
 func NewTransport[T, R any](req T, endpoint func() Endpoint[T, R], middlewares ...transport.EndpointMiddleware[T, R]) func(w http.ResponseWriter, r *http.Request) {

@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"time"
 
-	core_config "github.com/pawatOrbit/ai-mock-data-service/go/core/config"
-	"github.com/pawatOrbit/ai-mock-data-service/go/internal/server"
-	"github.com/pawatOrbit/ai-mock-data-service/go/utils/runtime"
+	core_config "github.com/yourorg/go-api-template/core/config"
+	"github.com/yourorg/go-api-template/internal/server"
+	"github.com/yourorg/go-api-template/utils/runtime"
 	"github.com/spf13/cobra"
 )
 

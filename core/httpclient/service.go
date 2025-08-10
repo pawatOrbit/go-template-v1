@@ -3,8 +3,8 @@ package httpclient
 import (
 	"log/slog"
 
-	core_config "github.com/pawatOrbit/ai-mock-data-service/go/core/config"
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/httpclient/completions"
+	core_config "github.com/yourorg/go-api-template/core/config"
+	"github.com/yourorg/go-api-template/core/httpclient/completions"
 )
 
 type LmStudioServiceClient struct {

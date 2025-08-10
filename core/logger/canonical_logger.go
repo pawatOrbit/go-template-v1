@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/exception"
+	"github.com/yourorg/go-api-template/core/exception"
 )
 
 var canonicalLogTemplate *template.Template

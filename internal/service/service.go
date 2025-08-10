@@ -1,18 +1,22 @@
 package service
 
 import (
-	"github.com/pawatOrbit/ai-mock-data-service/go/config"
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/exception"
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/httpclient"
-	"github.com/pawatOrbit/ai-mock-data-service/go/internal/repository"
-	"github.com/pawatOrbit/ai-mock-data-service/go/utils"
+	"github.com/yourorg/go-api-template/config"
+	"github.com/yourorg/go-api-template/core/exception"
+	"github.com/yourorg/go-api-template/core/httpclient"
+	"github.com/yourorg/go-api-template/internal/repository"
+	"github.com/yourorg/go-api-template/utils"
 )
 
 type Service struct {
 	Config *config.Config
 	Errors *exception.MockDataServiceErrors
 
-	TableSchemasService TableSchemasService
+	// Core services
+	HealthService  HealthServiceInterface
+	
+	// Example services - replace with your actual services
+	ExampleService ExampleService
 }
 
 func NewService(
@@ -23,8 +27,13 @@ func NewService(
 	lmStudioClient *httpclient.LmStudioServiceClient,
 ) Service {
 	return Service{
-		Config:              config,
-		Errors:              errors,
-		TableSchemasService: NewTableSchemasService(repo, errors),
+		Config: config,
+		Errors: errors,
+
+		// Core services
+		HealthService: NewHealthService(repo),
+
+		// Example services - replace with your actual services
+		ExampleService: NewExampleService(repo, errors),
 	}
 }

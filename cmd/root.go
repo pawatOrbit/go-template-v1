@@ -10,12 +10,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/pawatOrbit/ai-mock-data-service/go/config"
-	core_config "github.com/pawatOrbit/ai-mock-data-service/go/core/config"
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/logger"
-	"github.com/pawatOrbit/ai-mock-data-service/go/core/pgdb"
-	"github.com/pawatOrbit/ai-mock-data-service/go/internal/build"
-	"github.com/pawatOrbit/ai-mock-data-service/go/utils/runtime"
+	"github.com/yourorg/go-api-template/config"
+	core_config "github.com/yourorg/go-api-template/core/config"
+	"github.com/yourorg/go-api-template/core/logger"
+	"github.com/yourorg/go-api-template/core/pgdb"
+	"github.com/yourorg/go-api-template/internal/build"
+	"github.com/yourorg/go-api-template/utils/runtime"
 	"github.com/spf13/cobra"
 )
 

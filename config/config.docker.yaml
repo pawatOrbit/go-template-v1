@@ -1,0 +1,84 @@
+env: docker
+
+restServer:
+  port: 8080
+
+cors:
+  allowOrigins:
+    - "*"
+  AllowedMethods:
+    - "HEAD"
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "PATCH"
+    - "DELETE"
+  allowHeaders:
+    - "*"
+  exposeHeaders:
+    - "Accept"
+    - "Accept-Encoding"
+    - "Accept-Post"
+    - "Connect-Accept-Encoding"
+    - "Connect-Content-Encoding"
+    - "Content-Encoding"
+    - "Grpc-Accept-Encoding"
+    - "Grpc-Encoding"
+    - "Grpc-Message"
+    - "Grpc-Status"
+    - "Grpc-Status-Details-Bin"
+  maxAge: 7200
+
+postgres:
+  read:
+    host: "postgres"
+    port: 5432
+    username: "postgres"
+    password: "postgres"
+    database: "go_api_template"
+    schema: "public"
+    maxConnections: 20
+  write:
+    host: "postgres"
+    port: 5432
+    username: "postgres"
+    password: "postgres"
+    database: "go_api_template"
+    schema: "public"
+    maxConnections: 20
+
+auth:
+  jwtSecretKey: "docker-jwt-secret-key-change-in-production"
+  tokenDuration: "24h"
+  refreshDuration: "168h"
+  skipAuthPaths:
+    - "/health"
+    - "/metrics"
+    - "/api/v1/auth/login"
+    - "/api/v1/auth/register"
+    - "/api/v1/auth/refresh"
+
+redis:
+  host: "redis"
+  port: 6379
+  password: ""
+  database: 0
+  maxRetries: 3
+  poolSize: 10
+  minIdleConns: 5
+  dialTimeout: "5s"
+  readTimeout: "3s"
+  writeTimeout: "3s"
+  idleTimeout: "5m"
+
+rateLimit:
+  enabled: true
+  requests: 100
+  window: "1h"
+  includeHeaders: true
+  message: "Rate limit exceeded"
+  statusCode: 429
+  skipPaths:
+    - "/health"
+    - "/health/*"
+    - "/metrics"
