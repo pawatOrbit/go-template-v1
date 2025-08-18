@@ -40,6 +40,12 @@ func registerRoute(service service.Service) http.Handler {
 		}),
 	))
 
+	// Authentication endpoints (no authentication required)
+	r.Post("/api/v1/auth/login", httpserver.NewTransport(
+		&model.LoginRequest{},
+		httpserver.NewEndpoint(service.AuthService.Login),
+	))
+
 	// Example API endpoints - replace with your actual endpoints
 	r.Get("/api/v1/examples/{id}", httpserver.NewTransport(
 		&model.ExampleRequest{},

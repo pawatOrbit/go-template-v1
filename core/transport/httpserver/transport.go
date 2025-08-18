@@ -9,10 +9,19 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/yourorg/go-api-template/core/exception"
 	"github.com/yourorg/go-api-template/core/logger"
 	"github.com/yourorg/go-api-template/core/transport"
 	middleware "github.com/yourorg/go-api-template/core/transport/httpserver/middlewares"
 )
+
+type errorResp struct {
+	Status       int               `json:"status"`
+	Message      string            `json:"message"`
+	DebugMessage string            `json:"debug_message,omitempty"`
+	Fields       []string          `json:"fields,omitempty"`
+	Data         map[string]string `json:"data,omitempty"`
+}
 
 func NewTransport[T, R any](req T, endpoint func() Endpoint[T, R], middlewares ...transport.EndpointMiddleware[T, R]) func(w http.ResponseWriter, r *http.Request) {
 
@@ -55,8 +64,24 @@ func NewTransport[T, R any](req T, endpoint func() Endpoint[T, R], middlewares .
 		elapsedTime = time.Since(startTime)
 
 		if serviceError != nil {
-			httpStatusCode = http.StatusInternalServerError
-			HandleInternalServerError(w, httpStatusCode)
+			// Check if error is an ExceptionError to get proper status code
+			if exErr, ok := serviceError.(*exception.ExceptionError); ok {
+				httpStatusCode = exErr.HttpStatusCode
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(httpStatusCode)
+				// Build error response with all available fields
+				errorResponse := errorResp{
+					Status:  exErr.APIStatusCode,
+					Message: exErr.GlobalMessage,
+					Fields:  exErr.ErrFields,
+					Data:    exErr.ErrWithDatas,
+				}
+				json.NewEncoder(w).Encode(errorResponse)
+			} else {
+				httpStatusCode = http.StatusInternalServerError
+				HandleInternalServerError(w, httpStatusCode)
+			}
+			logRequestAndResponse(ctx, startTime, elapsedTime, method, path, header, requestBody, []byte(fmt.Sprintf("%v", resp)), serviceError, httpStatusCode)
 			return
 		} else {
 			w.Header().Set("Content-Type", "application/json")

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/rs/cors"
 	"github.com/yourorg/go-api-template/config"
 	"github.com/yourorg/go-api-template/core/cache"
 	"github.com/yourorg/go-api-template/core/exception"
@@ -17,7 +18,6 @@ import (
 	"github.com/yourorg/go-api-template/internal/repository"
 	"github.com/yourorg/go-api-template/internal/service"
 	"github.com/yourorg/go-api-template/utils"
-	"github.com/rs/cors"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
@@ -25,7 +25,7 @@ func NewHttpServer() (*http.Server, error) {
 	cfg := config.GetConfig()
 	slog.InfoContext(context.Background(), "Initializing HTTP server", "port", cfg.RestServer.Port)
 	var middlewares []middleware_httpserver.TransportMiddleware
-	
+
 	// CORS middleware
 	middlewares = append(middlewares, cors.New(cors.Options{
 		AllowedOrigins: cfg.CORS.AllowedOrigins,
@@ -42,7 +42,7 @@ func NewHttpServer() (*http.Server, error) {
 		if err != nil {
 			slog.WarnContext(context.Background(), "Failed to initialize Redis for rate limiting, using memory limiter", "error", err.Error())
 		}
-		
+
 		// Create rate limiter based on available cache service
 		var limiter ratelimit.Limiter
 		if cacheService := cache.GetRedisService(); cacheService != nil {
@@ -52,10 +52,10 @@ func NewHttpServer() (*http.Server, error) {
 			limiter = ratelimit.NewMemoryLimiter(createRateLimitConfig(cfg))
 			slog.InfoContext(context.Background(), "Using memory-based rate limiter")
 		}
-		
+
 		middlewares = append(middlewares, ratelimit.Middleware(limiter, createRateLimitConfig(cfg)))
-		slog.InfoContext(context.Background(), "Rate limiting enabled", 
-			"requests", cfg.RateLimit.Requests, 
+		slog.InfoContext(context.Background(), "Rate limiting enabled",
+			"requests", cfg.RateLimit.Requests,
 			"window", cfg.RateLimit.Window)
 	}
 
@@ -107,7 +107,7 @@ func createRateLimitConfig(cfg *config.Config) ratelimit.Config {
 		slog.WarnContext(context.Background(), "Invalid rate limit window duration, using default", "window", cfg.RateLimit.Window, "error", err.Error())
 		window = time.Hour
 	}
-	
+
 	config := ratelimit.Config{
 		Requests:       cfg.RateLimit.Requests,
 		Window:         window,
@@ -117,7 +117,7 @@ func createRateLimitConfig(cfg *config.Config) ratelimit.Config {
 		Message:        cfg.RateLimit.Message,
 		StatusCode:     cfg.RateLimit.StatusCode,
 	}
-	
+
 	// Set defaults if not configured
 	if config.Requests == 0 {
 		config.Requests = 100
@@ -131,6 +131,6 @@ func createRateLimitConfig(cfg *config.Config) ratelimit.Config {
 	if len(config.SkipPaths) == 0 {
 		config.SkipPaths = []string{"/health", "/health/*", "/metrics"}
 	}
-	
+
 	return config
 }
